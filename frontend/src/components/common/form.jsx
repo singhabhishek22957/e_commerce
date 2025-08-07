@@ -13,6 +13,7 @@ const CommonForm = ({
   setFormData,
   onSubmit,
   buttonText,
+  isBtnDisabled,
 }) => {
   const renderInputComponentType = (control) => {
     let element = null;
@@ -38,7 +39,7 @@ const CommonForm = ({
       case "select":
         element = (
           <Select
-            onValueChange={(event) =>
+            onValueChange={(value) =>
               setFormData({
                 ...formData,
                 [control.name]: value,
@@ -65,7 +66,14 @@ const CommonForm = ({
         element = <Checkbox value={value} {...control} />;
         break;
       case "textarea":
-        element = <Textarea value={value} {...control} />;
+        element = <Textarea
+        onChange={(event) =>
+              setFormData({
+                ...formData,
+                [control.name]: event.target.value,
+              })
+            }
+             value={value} {...control} />;
         break;
       default:
         element = (
@@ -97,7 +105,7 @@ const CommonForm = ({
           </div>
         ))}
       </div>
-      <Button className=" w-full mt-3" type="submit">
+      <Button  disabled={isBtnDisabled} className=" w-full mt-3" type="submit">
         {buttonText || "Submit"}
       </Button>
     </form>
