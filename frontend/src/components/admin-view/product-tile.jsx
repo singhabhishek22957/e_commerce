@@ -15,6 +15,7 @@ const AdminProductTile = ({ product  , setOpenCreateProductsDialog, setCurrentEd
         </div>
         <CardContent>
           <h2 className=" text-xl font-bold mb-2">{product?.title}</h2>
+          <div className={`${product?.salePrice > 0 ? "" : "hidden"} font-bold text-lg text-red-500`}> {(100 - (product?.salePrice / product?.price) * 100).toFixed(0)}% off</div>
           <div className=" flex justify-between items-center mb-2 ">
             <span
               className={`${
@@ -23,8 +24,9 @@ const AdminProductTile = ({ product  , setOpenCreateProductsDialog, setCurrentEd
             >
               ₹{product?.price}
             </span>
-            <span className="  text-lg font-bold">{product?.salePrice}</span>
+            <span className={` text-lg font-semibold text-primary ${product?.salePrice > 0 ? "" : "hidden"} `}>₹{product?.salePrice}</span>
           </div>
+          
         </CardContent>
         <CardFooter className=' flex justify-between items-center '>
             <Button onClick={()=>{

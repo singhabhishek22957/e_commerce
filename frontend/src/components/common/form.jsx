@@ -78,7 +78,7 @@ const CommonForm = ({
       default:
         element = (
           <Input
-            onchange={(event) =>
+            onChange={(event) =>
               setFormData({
                 ...formData,
                 [control.name]: event.target.value,

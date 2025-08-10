@@ -5,9 +5,49 @@ import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import { IoStar } from "react-icons/io5";
 import { Input } from "../ui/input";
+import { useDispatch, useSelector } from "react-redux";
+import { useToast } from "@/hooks/use-toast";
+import { addToCart, fetchCartItem } from "@/store/shop/cart-slice";
+import { setProductDetails } from "@/store/shop/products-slice";
 const ProductDetailsDialog = ({ open, setOpen, productDetail }) => {
+
+  const {user} = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { toast } = useToast();
+  
+    const handleAddToCart = (getCurrentProductID) => {
+      console.log("getCurrentProductID", getCurrentProductID);
+      dispatch(
+        addToCart({
+          userId: user?.id,
+          productId: getCurrentProductID,
+          quantity: 1,
+        })
+      ).then((res) => {
+        console.log("res", res);
+        if (res.payload.success) {
+          toast({
+            title: "Product added to cart",
+            description: "Product added to cart successfully",
+            variant: "default",
+          });
+          dispatch(fetchCartItem({ userId: user?.id }));
+        } else {
+          toast({
+            title: "Error to add Product to cart",
+            description: "Something went wrong",
+            variant: "destructive",
+          });
+        }
+      });
+    };
+
+    const handleDialogClose = () => {
+      setOpen(false);
+      dispatch(setProductDetails());
+    };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className=" grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
         <div className=" relative overflow-hidden rounded-lg">
           <img
@@ -51,7 +91,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetail }) => {
             <span className=" text-muted-foreground">4.5</span>
           </div>
           <div className=" mt-5 mb-5 ">
-            <Button className=" w-full">Add to cart</Button>
+            <Button className=" w-full" onClick={() => handleAddToCart(productDetail?._id)}  >Add to cart</Button>
           </div>
           <Separator />
           <div className=" max-h-[300px] overflow-auto">

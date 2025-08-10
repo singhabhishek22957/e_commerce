@@ -6,7 +6,8 @@ import dotenv from 'dotenv';
 import authRouter from './src/routes/auth/auth.routes.js';
 import adminProductRouter from './src/routes/admin/products.route.js';
 import shopProductsRouter from './src/routes/shop/product.route.js';
-
+import shopCartRouter from './src/routes/shop/cart.route.js';
+import addressRouter from './src/routes/shop/address.route.js';
 
 dotenv.config(
     {
@@ -43,6 +44,8 @@ app.get('/',(req,res)=>{
 app.use('/api/auth',authRouter);
 app.use('/api/admin/product',adminProductRouter);
 app.use('/api/shop/product',shopProductsRouter);
+app.use('/api/shop/cart',shopCartRouter);
+app.use('/api/shop/address',addressRouter);
 
 
 

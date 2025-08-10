@@ -4,7 +4,11 @@ import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { Button } from "@/components/ui/button";
 import { sortOptions } from "@/config";
 import { useToast } from "@/hooks/use-toast";
-import { fetchedFilteredProducts, fetchedProductDetails } from "@/store/shop/products-slice";
+import { addToCart, fetchCartItem } from "@/store/shop/cart-slice";
+import {
+  fetchedFilteredProducts,
+  fetchedProductDetails,
+} from "@/store/shop/products-slice";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,12 +23,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { createSearchParams, useSearchParams } from "react-router-dom";
 
 const ShopListing = () => {
-  const { productsList, productDetails } = useSelector((state) => state.shoppingProduct);
+  const { productsList, productDetails } = useSelector(
+    (state) => state.shoppingProduct
+  );
+  const { user } = useSelector((state) => state.auth);
+  const {cartItems} = useSelector((state) => state.shoppingCart);
   const dispatch = useDispatch();
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const {toast} = useToast();
+  const { toast } = useToast();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const handleSort = (value) => {
     console.log("value", value);
@@ -65,9 +73,9 @@ const ShopListing = () => {
     return queryParams.join("&");
   };
 
-  function handleGetProductDetails(getCurrentProductID){
+  function handleGetProductDetails(getCurrentProductID) {
     console.log("getCurrentProductID", getCurrentProductID);
-    dispatch(fetchedProductDetails(getCurrentProductID)).then((res)=>{
+    dispatch(fetchedProductDetails(getCurrentProductID)).then((res) => {
       console.log("res", res);
       if (res.payload.success) {
         toast({
@@ -82,10 +90,37 @@ const ShopListing = () => {
           variant: "destructive",
         });
       }
-    })
-    
+    });
+
     console.log("productDetails", productDetails);
   }
+
+  const handleAddToCart = (getCurrentProductID) => {
+    console.log("getCurrentProductID", getCurrentProductID);
+    dispatch(
+      addToCart({
+        userId: user?.id,
+        productId: getCurrentProductID,
+        quantity: 1,
+      })
+    ).then((res) => {
+      console.log("res", res);
+      if (res.payload.success) {
+        toast({
+          title: "Product added to cart",
+          description: "Product added to cart successfully",
+          variant: "default",
+        });
+        dispatch(fetchCartItem({ userId: user?.id }));
+      } else {
+        toast({
+          title: "Error to add Product to cart",
+          description: "Something went wrong",
+          variant: "destructive",
+        });
+      }
+    });
+  };
 
   useEffect(() => {
     if (filters && Object.keys(filters).length > 0) {
@@ -109,13 +144,15 @@ const ShopListing = () => {
   }, [dispatch, sort, filters]);
 
   useEffect(() => {
-      if(productDetails!==null){
-        setOpenDetailsDialog(true);
-      }
-  },[productDetails]);
+    if (productDetails !== null) {
+      setOpenDetailsDialog(true);
+    }
+  }, [productDetails]);
   console.log("productDetails", productDetails);
-  
+
   console.log("productsList", productsList);
+  console.log("cartItems", cartItems);
+  
 
   return (
     <div className=" grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6 ">
@@ -165,11 +202,20 @@ const ShopListing = () => {
           {productsList &&
             productsList.length > 0 &&
             productsList.map((product) => (
-              <ShoppingProductTile key={product.id} product={product} handleGetProductDetails={handleGetProductDetails} />
+              <ShoppingProductTile
+                handleAddToCart={handleAddToCart}
+                key={product.id}
+                product={product}
+                handleGetProductDetails={handleGetProductDetails}
+              />
             ))}
         </div>
       </div>
-      <ProductDetailsDialog open={openDetailsDialog} setOpen={setOpenDetailsDialog} productDetail={productDetails} />
+      <ProductDetailsDialog
+        open={openDetailsDialog}
+        setOpen={setOpenDetailsDialog}
+        productDetail={productDetails}
+      />
     </div>
   );
 };

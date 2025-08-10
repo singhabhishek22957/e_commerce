@@ -261,6 +261,20 @@ export const addressFormControls = [
     placeholder: "Enter your city",
   },
   {
+    label: "State",
+    name: "state",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter your State",
+  },
+  {
+    label: "Country",
+    name: "country",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter your Country",
+  },
+  {
     label: "Pincode",
     name: "pincode",
     componentType: "input",
@@ -268,8 +282,8 @@ export const addressFormControls = [
     placeholder: "Enter your pincode",
   },
   {
-    label: "Phone",
-    name: "phone",
+    label: "Contact Number",
+    name: "contact",
     componentType: "input",
     type: "text",
     placeholder: "Enter your phone number",
