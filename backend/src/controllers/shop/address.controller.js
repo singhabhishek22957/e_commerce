@@ -118,4 +118,36 @@ const deleteAddress = async (req, res) => {
   }
 };
 
-export { addAddress, fetchedAllAddress, updateAddress, deleteAddress };
+const getAddressById = async (req, res) => {
+  const { addressId } = req.params;
+  console.log("addressId", addressId);
+
+  try {
+    const address = await Address.findById(addressId);
+    if (!address) { 
+      return res
+        .status(404)
+        .json({ success: false, message: "Address not found" });
+    }
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Address fetched successfully",
+        data: address,
+      });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error", error: error });
+  }
+};
+
+export {
+  addAddress,
+  fetchedAllAddress,
+  updateAddress,
+  deleteAddress,
+  getAddressById,
+};

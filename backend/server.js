@@ -8,6 +8,11 @@ import adminProductRouter from './src/routes/admin/products.route.js';
 import shopProductsRouter from './src/routes/shop/product.route.js';
 import shopCartRouter from './src/routes/shop/cart.route.js';
 import addressRouter from './src/routes/shop/address.route.js';
+import orderRouter from './src/routes/shop/order.route.js';
+import adminOrderRouter from './src/routes/admin/order.route.js';
+import shopSearchRouter from './src/routes/shop/search.route.js';
+import shopReviewRouter from './src/routes/shop/review.route.js';
+import featureRouter from './src/routes/common/feature.route.js';
 
 dotenv.config(
     {
@@ -25,7 +30,7 @@ const port = process.env.PORT || 5000;
 app.use(
     cors({
         // 
-        origin: 'http://localhost:5173',
+        origin: process.env.FRONTEND_URL,
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders :['Content-Type', 'Authorization', 'Cache-Control','Expires','Pragma'],
         credentials: true,
@@ -42,10 +47,20 @@ app.get('/',(req,res)=>{
 
 
 app.use('/api/auth',authRouter);
+
 app.use('/api/admin/product',adminProductRouter);
+app.use('/api/admin/order',adminOrderRouter);
+
+
+
 app.use('/api/shop/product',shopProductsRouter);
 app.use('/api/shop/cart',shopCartRouter);
 app.use('/api/shop/address',addressRouter);
+app.use('/api/shop/order',orderRouter);
+app.use('/api/shop/search',shopSearchRouter);
+app.use('/api/shop/review',shopReviewRouter);
+
+app.use('/api/common/feature',featureRouter);
 
 
 

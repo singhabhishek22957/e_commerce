@@ -19,6 +19,9 @@ import { Skeleton } from './components/ui/skeleton';
 import CardSkeleton from './components/common/CardSkeleton';
 import { Navigate } from 'react-router-dom';
 import { checkAuth } from '@/store/auth-slice';
+import PaypalReturnPage from './pages/shopping-view/paypal-return';
+import StripSuccess from './pages/shopping-view/strip-success';
+import ShoppingSearch from './pages/shopping-view/search';
 const App = () => {
   // const isAuthenticated = false;
   // const user = {
@@ -37,7 +40,7 @@ const App = () => {
   }
   
   return (
-    <div className=' flex flex-col overflow-hidden bg-white '>
+    <div className=' flex flex-col min-h-screen bg-white '>
       {/*  common component */}
       <Routes>
         <Route path='*' element={ <Navigate to="/auth/login" replace /> } />
@@ -110,7 +113,26 @@ const App = () => {
             <ShopCheckout/>
           </CheckAuth>
         } />
+
+        <Route path='payal-return' element={
+          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <PaypalReturnPage/>
+          </CheckAuth>
+        } />
+        <Route path='success' element={
+          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <StripSuccess/>
+          </CheckAuth>
+        } />
+
+        <Route path='search' element={
+          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <ShoppingSearch/>
+          </CheckAuth>
+        } />
         </Route>
+
+
 
       </Routes>
 

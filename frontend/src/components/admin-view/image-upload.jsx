@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { FileIcon, ImportIcon, UploadCloudIcon, XIcon } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, {  useRef } from "react";
 
 const ProductImageUpload = ({
   imageFile,
@@ -42,8 +42,8 @@ const ProductImageUpload = ({
       inputRef.current.value = "";
     }
   };
-  const [isImageUploadBtnDisabled, setIsImageUploadBtnDisabled] =
-    useState(false);
+  // const [isImageUploadBtnDisabled, setIsImageUploadBtnDisabled] =
+  //   useState(false);
   const uploadImageToCloudinary = async () => {
     if (!imageFile) {
       toast({
@@ -67,7 +67,7 @@ const ProductImageUpload = ({
     setImageLoadingState(false);
     if (response) {
       setUploadedImageUrl(response.data.data.secure_url);
-      setIsImageUploadBtnDisabled(true);
+      // setIsImageUploadBtnDisabled(true);
       toast({
         title: "Image Upload Success",
         description: "Image uploaded successfully",
@@ -131,11 +131,11 @@ const ProductImageUpload = ({
       </div>
       <Button
         onClick={uploadImageToCloudinary}
-        className={`${isImageUploadBtnDisabled ? "hidden" : ""} ${isEditMode?"opacity-60":""} mt-4`}
+        className={`${uploadedImageUrl!==null ? "hidden" : ""} ${isEditMode?"opacity-60":""} mt-4`}
         disabled={imageLoadingState||isEditMode}
        
       >
-        Upload
+        {imageLoadingState ? "Uploading..." : "Upload Image"}
       </Button>
     </div>
   );

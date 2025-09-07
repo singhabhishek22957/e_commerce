@@ -27,13 +27,14 @@ const ShopListing = () => {
     (state) => state.shoppingProduct
   );
   const { user } = useSelector((state) => state.auth);
-  const {cartItems} = useSelector((state) => state.shoppingCart);
+  const { cartItems } = useSelector((state) => state.shoppingCart);
   const dispatch = useDispatch();
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const categorySearchparams = searchParams.get("category");
   const handleSort = (value) => {
     console.log("value", value);
   };
@@ -73,7 +74,7 @@ const ShopListing = () => {
     return queryParams.join("&");
   };
 
-  function handleGetProductDetails(getCurrentProductID) {
+  const  handleGetProductDetails = (getCurrentProductID)=> {
     console.log("getCurrentProductID", getCurrentProductID);
     dispatch(fetchedProductDetails(getCurrentProductID)).then((res) => {
       console.log("res", res);
@@ -95,8 +96,28 @@ const ShopListing = () => {
     console.log("productDetails", productDetails);
   }
 
-  const handleAddToCart = (getCurrentProductID) => {
+  const handleAddToCart = (getCurrentProductID, totalStock) => {
     console.log("getCurrentProductID", getCurrentProductID);
+    console.log("cartItems", cartItems);
+    let getCartItems = cartItems.items || [];
+
+    if (getCartItems.length) {
+      const indexOfCurrentItem = getCartItems.findIndex(
+        (item) => item.productId === getCurrentProductID
+      );
+
+      if (indexOfCurrentItem > -1) {
+        const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+        if (getQuantity + 1 > totalStock) {
+          return toast({
+            title: "Product is out of stock",
+            description: `only you can buy ${totalStock} of this product`,
+            variant: "destructive",
+          });
+        }
+      }
+    }
+
     dispatch(
       addToCart({
         userId: user?.id,
@@ -132,7 +153,7 @@ const ShopListing = () => {
   useEffect(() => {
     setSort(sortOptions[0].id);
     setFilters(JSON.parse(sessionStorage.getItem("filters")));
-  }, []);
+  }, [categorySearchparams]);
   console.log("filters", filters);
   console.log("searchParams", searchParams);
 
@@ -152,7 +173,6 @@ const ShopListing = () => {
 
   console.log("productsList", productsList);
   console.log("cartItems", cartItems);
-  
 
   return (
     <div className=" grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6 ">
@@ -219,5 +239,6 @@ const ShopListing = () => {
     </div>
   );
 };
+
 
 export default ShopListing;

@@ -1,7 +1,7 @@
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import React, { useEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -29,12 +29,16 @@ import { Label } from "../ui/label";
 
 const MenuItems = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchparams, setSearchParams] = useSearchParams();
 
   const handleNavigate=(menuItem) =>{
+
     sessionStorage.removeItem("filters");
-    const currentFilter = menuItem.id ==='home'?{}:{category:[menuItem.id]}
+    const currentFilter = menuItem.id ==='home'|| menuItem.id==='products' || menuItem.id==='search'?null:{category:[menuItem.id]}
   
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
+    location.pathname.includes('listing')&& currentFilter!==null?setSearchParams(new URLSearchParams(`?category=${menuItem.id}`)):
     navigate(menuItem.path);
   }
   return (
@@ -86,8 +90,11 @@ const HeaderRightContent = () => {
     <div className=" flex lg:items-center lg:flex-row flex-col gap-4">
       <Sheet open={openCartSheet} onOpenChange={setOpenCartSheet}>
         <SheetTrigger asChild>
-          <Button variant="outline">
+          <Button variant=""
+          className=' relative bg-gray-600'
+          >
             <MdOutlineShoppingCart size={24} />
+            <span className={`absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white ${cartItems?.items?.length === undefined||cartItems?.items?.length === 0 ? "hidden" : ""} `}>{cartItems?.items?.length || 0}</span>
             <span className="sr-only">User Cart</span>
           </Button>
         </SheetTrigger>

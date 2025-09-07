@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import bannerOne from "../../assets/banner-1.webp";
 import bannerTwo from "../../assets/banner-2.webp";
 import bannerThree from "../../assets/banner-3.webp";
@@ -32,7 +32,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { addToCart, fetchCartItem } from "@/store/shop/cart-slice";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
+import { getFeatureImages } from "@/store/common/feature-slice";
 const ShopHome = () => {
+  const { featureImages } = useSelector((state) => state.commonFeature);
   const { productsList } = useSelector((state) => state.shoppingProduct);
   const slides = [bannerOne, bannerTwo, bannerThree];
   const categoriesWithIcon = [
@@ -119,7 +121,7 @@ const ShopHome = () => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImages.length);
     }, 5000);
     return () => {
       clearInterval(timer);
@@ -141,24 +143,31 @@ const ShopHome = () => {
     }
   }, [productDetails]);
 
+  // fatech feature images 
+  useEffect(() => {
+    dispatch(getFeatureImages());
+
+  }, [dispatch]);
+  
+
   return (
     <div className=" flex flex-col min-h-screen ">
       <div className=" relative w-full overflow-hidden h-[600px]">
-        {slides.map((slide, index) => (
+        {featureImages && featureImages.length >0 ?featureImages.map((slide, index) => (
           <img
             key={index}
-            src={slide}
+            src={slide.image}
             alt="banner image"
             className={`  ${
               index === currentSlide ? "opacity-100" : "opacity-0"
             }  absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
           />
-        ))}
+        )):null}
 
         <Button
           onClick={() =>
             setCurrentSlide(
-              (prevSlide) => (prevSlide - 1 + slides.length) % slides.length
+              (prevSlide) => (prevSlide - 1 + featureImages.length) % featureImages.length
             )
           }
           variant="outline"
@@ -169,7 +178,7 @@ const ShopHome = () => {
         </Button>
         <Button
           onClick={() =>
-            setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length)
+            setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImages.length)
           }
           variant="outline"
           size="icon"

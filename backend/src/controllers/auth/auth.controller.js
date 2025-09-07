@@ -160,6 +160,9 @@ const logoutUser = async (req,res)=>{
 }
 
 
+
+
+
 // auth middleware
 
 const authMiddleware = async(req,res,next)=>{

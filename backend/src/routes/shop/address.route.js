@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { addAddress, deleteAddress, fetchedAllAddress, updateAddress } from "../../controllers/shop/address.controller.js";
+import { addAddress, deleteAddress, fetchedAllAddress, getAddressById, updateAddress } from "../../controllers/shop/address.controller.js";
 
 
 
@@ -9,6 +9,7 @@ router.post("/add", addAddress);
 router.get("/get/:userId", fetchedAllAddress);
 router.put("/update/:userId/:addressId", updateAddress);
 router.delete("/delete/:userId/:addressId", deleteAddress);
+router.get("/get-address/:addressId", getAddressById);
 
 
 export default router;

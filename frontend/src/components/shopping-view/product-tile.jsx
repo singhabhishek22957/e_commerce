@@ -3,6 +3,7 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { brandOptionsMap, categoryOptionsMap } from "@/config";
+import { toast } from "@/hooks/use-toast";
 
 const ShoppingProductTile = ({
   product,
@@ -18,7 +19,19 @@ const ShoppingProductTile = ({
             alt={product.title}
             className=" w-full h-[300px] object-cover rounded-t-lg"
           />
-          {product?.salePrice > 0 ? (
+          {product?.totalStock === 0 ? (
+            <Badge className=" absolute top-2 right-2 bg-green-600 hover:bg-green-700">
+              Out of stock
+            </Badge>
+          ) : product?.totalStock < 10 ? (
+            <Badge className=" absolute top-2 right-2 bg-yellow-600 hover:bg-yellow-700">
+              {`Only ${product?.totalStock} ${
+                product?.totalStock === 1 ? "item" : "items"
+              } left`}
+            </Badge>
+          ) :null}
+          {
+           product?.salePrice > 0 ? (
             <Badge className=" absolute top-2 left-2 bg-red-600 hover:bg-red-700">
               Sale
             </Badge>
@@ -48,14 +61,40 @@ const ShoppingProductTile = ({
               </span>
             )}
           </div>
-          <div className={`${product?.salePrice > 0 ? "" : "hidden"} font-bold text-lg text-red-500`}> {(100 - (product?.salePrice / product?.price) * 100).toFixed(0)}% off</div>
+          <div
+            className={`${
+              product?.salePrice > 0 ? "" : "hidden"
+            } font-bold text-lg text-red-500`}
+          >
+            {" "}
+            {(100 - (product?.salePrice / product?.price) * 100).toFixed(0)}%
+            off
+          </div>
         </CardContent>
       </div>
 
       <CardFooter>
-        <Button onClick={() => handleAddToCart(product._id)} className="w-full">
-          Add to cart
-        </Button>
+        {product?.totalStock === 0 ? (
+          <Button
+            onClick={() => {
+              toast({
+                title: "Out of stock",
+                description: "Product is out of stock",
+                variant: "destructive",
+              });
+            }}
+            className="w-full opacity-60 cursor-not-allowed"
+          >
+            Out of stock
+          </Button>
+        ) : (
+          <Button
+            onClick={() => handleAddToCart(product._id, product.totalStock)}
+            className="w-full"
+          >
+            Add to cart
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

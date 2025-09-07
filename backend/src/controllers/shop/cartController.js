@@ -234,4 +234,5 @@ const deleteCartItem = async (req, res) => {
   }
 };
 
+
 export { addToCart, fetchCartItem, updateCartItem, deleteCartItem };

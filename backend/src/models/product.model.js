@@ -33,6 +33,12 @@ const productSchema = new Schema({
         type: Number,
         required: true,
     },
+    totalRating: {
+        type: Number,
+        default: 1,
+        min: 1,
+        max: 5,
+    }
 },{timestamps: true});
 
 
