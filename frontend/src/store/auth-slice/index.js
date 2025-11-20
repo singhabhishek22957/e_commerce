@@ -67,7 +67,7 @@ export const LogoutUser = createAsyncThunk("auth/logout", async (_, { rejectWith
 export const checkAuth = createAsyncThunk(
   "auth/check-auth", async(formData,{rejectWithValue})=>{
     try {
-      const response = await axios.get(`${backend_url}/api/auth/check-auth`, {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/check-auth`, {
         withCredentials: true,
         headers:{
             'Cache-Control': 'no-cache, no-store, must-revalidate , proxy-revalidate',
