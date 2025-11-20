@@ -7,14 +7,14 @@ const initialState = {
   user: null,
 };
 
-const backend_url = "http://localhost:3000";
+// const backend_url = "http://localhost:3000";
 
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (formData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${backend_url}/api/auth/register`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/register`,
         formData,
         {
           withCredentials: true,
@@ -34,7 +34,7 @@ export const loginUser = createAsyncThunk("auth/login", async (formData, { rejec
   try {
     console.log("sending request for login");
     
-    const response = await axios.post(`${backend_url}/api/auth/login`, formData, {
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, formData, {
       withCredentials: true,
     });
     console.log("response for login", response);
@@ -51,7 +51,7 @@ export const loginUser = createAsyncThunk("auth/login", async (formData, { rejec
 
 export const LogoutUser = createAsyncThunk("auth/logout", async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${backend_url}/api/auth/logout`, {
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {
       withCredentials: true,
     });
     return response.data;
