@@ -22,7 +22,8 @@ const AuthLogin = () => {
         console.log("Done2");
         console.log("dispatch", dispatch);
         
-        dispatch(loginUser(fromData)).then((res)=>{
+        dispatch(
+            loginUser(fromData)).then((res)=>{
             console.log("Done1");
             console.log(res);
             if(res.payload.success){

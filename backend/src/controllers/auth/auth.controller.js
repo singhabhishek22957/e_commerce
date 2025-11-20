@@ -87,7 +87,7 @@ const loginUser = async (req,res)=>{
         console.log("user found", user);
         
         if(!user){
-            return res.json({
+            return res.status(400).json({
                 success:false,
                 message:"User not found",
             })

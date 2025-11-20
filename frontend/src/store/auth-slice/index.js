@@ -46,8 +46,6 @@ export const loginUser = createAsyncThunk("auth/login", async (formData, { rejec
     return rejectWithValue(error.response.data);
   
   }
-
-  console.log("login end point hit");
   
 });
 
